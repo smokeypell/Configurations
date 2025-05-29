@@ -1,6 +1,6 @@
 #
 # check-pr.yml
-# Close PRs directed at `bugfix-2.0.x`
+# Close PRs directed at `bugfix-2.x.x`
 #
 
 name: PR Bad Target
@@ -17,7 +17,7 @@ jobs:
     name: PR Bad Target
     if: github.repository == 'MarlinFirmware/Configurations'
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
     - uses: superbrothers/close-pull-request@v3
