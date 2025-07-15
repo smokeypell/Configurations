@@ -127,7 +127,11 @@
 #endif
 
 // Enable CAN bus support and protocol
-//#define CAN_MASTER
+//#define CAN_HOST
+//#define CAN_TOOLHEAD
+#if ANY(CAN_HOST, CAN_TOOLHEAD)
+  //#define CAN_DEBUG
+#endif
 
 // Enable the Bluetooth serial interface on AT90USB devices
 //#define BLUETOOTH
@@ -153,9 +157,9 @@
  * Options: A4988, A5984, DRV8825, LV8729, TB6560, TB6600, TMC2100,
  *          TMC2130, TMC2130_STANDALONE, TMC2160, TMC2160_STANDALONE,
  *          TMC2208, TMC2208_STANDALONE, TMC2209, TMC2209_STANDALONE,
- *          TMC2240, TMC2240_STANDALONE, TMC2660, TMC2660_STANDALONE,
+ *          TMC2240, TMC2660, TMC2660_STANDALONE,
  *          TMC5130, TMC5130_STANDALONE, TMC5160, TMC5160_STANDALONE
- * :['A4988', 'A5984', 'DRV8825', 'LV8729', 'TB6560', 'TB6600', 'TMC2100', 'TMC2130', 'TMC2130_STANDALONE', 'TMC2160', 'TMC2160_STANDALONE', 'TMC2208', 'TMC2208_STANDALONE', 'TMC2209', 'TMC2209_STANDALONE', 'TMC2240', 'TMC2240_STANDALONE', 'TMC2660', 'TMC2660_STANDALONE', 'TMC5130', 'TMC5130_STANDALONE', 'TMC5160', 'TMC5160_STANDALONE']
+ * :['A4988', 'A5984', 'DRV8825', 'LV8729', 'TB6560', 'TB6600', 'TMC2100', 'TMC2130', 'TMC2130_STANDALONE', 'TMC2160', 'TMC2160_STANDALONE', 'TMC2208', 'TMC2208_STANDALONE', 'TMC2209', 'TMC2209_STANDALONE', 'TMC2240', 'TMC2660', 'TMC2660_STANDALONE', 'TMC5130', 'TMC5130_STANDALONE', 'TMC5160', 'TMC5160_STANDALONE']
  */
 // Tronxy X5S-2E:
 // The OEM stock model uses HEROIC HR4982MTE982 drivers, similar to A4988 but with 2 step jumpers instead of 3.
@@ -749,7 +753,12 @@
   //#define MPC_AUTOTUNE_MENU                         // Add MPC auto-tuning to the "Advanced Settings" menu. (~350 bytes of flash)
 
   #define MPC_MAX 255                                 // (0..255) Current to nozzle while MPC is active.
-  #define MPC_HEATER_POWER { 40.0f }                  // (W) Heat cartridge powers.
+  #define MPC_HEATER_POWER { 40.0f }                  // (W) Nominal heat cartridge powers.
+  //#define MPC_PTC                                   // Hotend power changes with temperature (e.g., PTC heat cartridges).
+  #if ENABLED(MPC_PTC)
+    #define MPC_HEATER_ALPHA { 0.0028f }              // Temperature coefficient of resistance of the heat cartridges.
+    #define MPC_HEATER_REFTEMP { 20 }                 // (°C) Reference temperature for MPC_HEATER_POWER and MPC_HEATER_ALPHA.
+  #endif
 
   #define MPC_INCLUDE_FAN                             // Model the fan speed?
 
@@ -821,7 +830,7 @@
   // The OEM stock model uses a clone MK3a 300 @ 12V with no insulation and can reach a maximum 70C at 25C ambient.
   // Tested with commands: "M304 P100 I20 D500" and "M303 C10 E-1 S65"
   #define DEFAULT_bedKp 379.43
-  #define DEFAULT_bedKi 72.37
+  #define DEFAULT_bedKi  72.37
   #define DEFAULT_bedKd 497.33
 
 #else
@@ -3133,7 +3142,7 @@
 
 //
 // FYSETC variant of the MINI12864 graphic controller with SD support
-// https://wiki.fysetc.com/Mini12864_Panel/
+// https://wiki.fysetc.com/docs/Mini12864Panel
 //
 //#define FYSETC_MINI_12864_X_X    // Type C/D/E/F. No tunable RGB Backlight by default
 //#define FYSETC_MINI_12864_1_2    // Type C/D/E/F. Simple RGB Backlight (always on)

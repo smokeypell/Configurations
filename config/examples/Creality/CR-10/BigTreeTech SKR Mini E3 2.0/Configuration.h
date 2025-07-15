@@ -127,7 +127,11 @@
 #endif
 
 // Enable CAN bus support and protocol
-//#define CAN_MASTER
+//#define CAN_HOST
+//#define CAN_TOOLHEAD
+#if ANY(CAN_HOST, CAN_TOOLHEAD)
+  //#define CAN_DEBUG
+#endif
 
 // Enable the Bluetooth serial interface on AT90USB devices
 //#define BLUETOOTH
@@ -153,9 +157,9 @@
  * Options: A4988, A5984, DRV8825, LV8729, TB6560, TB6600, TMC2100,
  *          TMC2130, TMC2130_STANDALONE, TMC2160, TMC2160_STANDALONE,
  *          TMC2208, TMC2208_STANDALONE, TMC2209, TMC2209_STANDALONE,
- *          TMC2240, TMC2240_STANDALONE, TMC2660, TMC2660_STANDALONE,
+ *          TMC2240, TMC2660, TMC2660_STANDALONE,
  *          TMC5130, TMC5130_STANDALONE, TMC5160, TMC5160_STANDALONE
- * :['A4988', 'A5984', 'DRV8825', 'LV8729', 'TB6560', 'TB6600', 'TMC2100', 'TMC2130', 'TMC2130_STANDALONE', 'TMC2160', 'TMC2160_STANDALONE', 'TMC2208', 'TMC2208_STANDALONE', 'TMC2209', 'TMC2209_STANDALONE', 'TMC2240', 'TMC2240_STANDALONE', 'TMC2660', 'TMC2660_STANDALONE', 'TMC5130', 'TMC5130_STANDALONE', 'TMC5160', 'TMC5160_STANDALONE']
+ * :['A4988', 'A5984', 'DRV8825', 'LV8729', 'TB6560', 'TB6600', 'TMC2100', 'TMC2130', 'TMC2130_STANDALONE', 'TMC2160', 'TMC2160_STANDALONE', 'TMC2208', 'TMC2208_STANDALONE', 'TMC2209', 'TMC2209_STANDALONE', 'TMC2240', 'TMC2660', 'TMC2660_STANDALONE', 'TMC5130', 'TMC5130_STANDALONE', 'TMC5160', 'TMC5160_STANDALONE']
  */
 #define X_DRIVER_TYPE  TMC2209
 #define Y_DRIVER_TYPE  TMC2209
@@ -741,7 +745,12 @@
   //#define MPC_AUTOTUNE_MENU                         // Add MPC auto-tuning to the "Advanced Settings" menu. (~350 bytes of flash)
 
   #define MPC_MAX 255                                 // (0..255) Current to nozzle while MPC is active.
-  #define MPC_HEATER_POWER { 40.0f }                  // (W) Heat cartridge powers.
+  #define MPC_HEATER_POWER { 40.0f }                  // (W) Nominal heat cartridge powers.
+  //#define MPC_PTC                                   // Hotend power changes with temperature (e.g., PTC heat cartridges).
+  #if ENABLED(MPC_PTC)
+    #define MPC_HEATER_ALPHA { 0.0028f }              // Temperature coefficient of resistance of the heat cartridges.
+    #define MPC_HEATER_REFTEMP { 20 }                 // (°C) Reference temperature for MPC_HEATER_POWER and MPC_HEATER_ALPHA.
+  #endif
 
   #define MPC_INCLUDE_FAN                             // Model the fan speed?
 
@@ -809,8 +818,8 @@
                               // Get the power from the temperature report ('M105' => B@:nnn) and try P*2-20 to P*2-10.
   //#define PID_BED_DEBUG     // Print Bed PID debug data to the serial port. Use 'M303 D' to enable/disable.
 
-  #define DEFAULT_bedKp 10.00
-  #define DEFAULT_bedKi .023
+  #define DEFAULT_bedKp  10.00
+  #define DEFAULT_bedKi   0.023
   #define DEFAULT_bedKd 305.4
 
   // FIND YOUR OWN: "M303 E-1 C8 S90" to run autotune on the bed at 90 degreesC for 8 cycles.
@@ -3135,7 +3144,7 @@
 
 //
 // FYSETC variant of the MINI12864 graphic controller with SD support
-// https://wiki.fysetc.com/Mini12864_Panel/
+// https://wiki.fysetc.com/docs/Mini12864Panel
 //
 //#define FYSETC_MINI_12864_X_X    // Type C/D/E/F. No tunable RGB Backlight by default
 //#define FYSETC_MINI_12864_1_2    // Type C/D/E/F. Simple RGB Backlight (always on)
