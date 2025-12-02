@@ -5,16 +5,16 @@ This example configuration is for a Kossel XL with a printable bed diameter of 2
 You might need (or want) to edit at least the following settings in `Configuration.h`:
 * `MANUAL_Z_HOME_POS` - The available height of your printing space. Auto Bed Leveling makes it less important to have the exact value.
 * `PRINTABLE_RADIUS` - The printable radius is how far from the center the nozzle can reach.
-* `DEFAULT_AXIS_STEPS_PER_UNIT` - Steps-per-millimeter for the delta steppers, and for the extruder [to optimize the amount of filament flow](http://zennmaster.com/makingstuff/reprap-101-calibrating-your-extruder-part-1-e-steps).
+* `DEFAULT_AXIS_STEPS_PER_UNIT` - Steps-per-millimeter for the delta steppers, and for the extruder [to optimize the amount of filament flow](//zennmaster.com/makingstuff/reprap-101-calibrating-your-extruder-part-1-e-steps).
 
 ### Fine tuning
 * Increase `DELTA_RADIUS` if the model comes out convex (with a bulge in the middle)
 * Increase `DELTA_DIAGONAL_ROD` if the model comes out larger than expected
 
 ### [https://reprap.org/wiki/PID_Tuning](PID Tuning)
-* `DEFAULT_Kp` - The proportional term
-* `DEFAULT_Ki` - The integral term
-* `DEFAULT_Kd` - The derivative term
+* `DEFAULT_KP` - The proportional term
+* `DEFAULT_KI` - The integral term
+* `DEFAULT_KD` - The derivative term
 
 ### PSU Options
 * The power supply is configured to 2 (to use a relay to switch 12V on and off)
